@@ -11,7 +11,7 @@ const NewsletterForm = ({ title = 'Subscribe to the newsletter', apiUrl = '/api/
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!siteMetadata.newsletter?.enabled) {
+    if (!(siteMetadata.newsletter as { enabled?: boolean })?.enabled) {
       setError(true)
       setMessage('Subscriptions are not yet turned on.')
       return
