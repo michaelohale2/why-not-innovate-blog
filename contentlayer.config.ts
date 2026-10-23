@@ -1,5 +1,5 @@
 import { defineDocumentType, ComputedFields, makeSource } from 'contentlayer2/source-files'
-import { writeFileSync } from 'fs'
+import { readFileSync, writeFileSync } from 'fs'
 import readingTime from 'reading-time'
 import { slug } from 'github-slugger'
 import path from 'path'
@@ -109,6 +109,8 @@ export const Blog = defineDocumentType(() => ({
     layout: { type: 'string' },
     bibliography: { type: 'string' },
     canonicalUrl: { type: 'string' },
+    githubUrl: { type: 'string' },
+    discussUrl: { type: 'string' },
   },
   computedFields: {
     ...computedFields,
@@ -179,8 +181,12 @@ export default makeSource({
       rehypePresetMinify,
     ],
   },
-  onSuccess: async (importData) => {
-    const { allBlogs } = await importData()
+  onSuccess: async () => {
+    // importData() returns a cached (stale) module in dev, which wiped the tag and search
+    // files whenever any content file was saved, so read the freshly generated JSON instead
+    const allBlogs = Object.values(
+      JSON.parse(readFileSync('.contentlayer/generated/Blog/_index.json', 'utf8'))
+    )
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
   },
