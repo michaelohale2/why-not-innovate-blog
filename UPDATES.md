@@ -2,31 +2,6 @@
 
 Features that are built into the template but not set up yet. Secrets go in a `.env.local` file at the project root (it is not committed). `.env.example` lists every variable name. Restart `yarn dev` after changing `.env.local` or `data/siteMetadata.js`.
 
-## Newsletter signup
-
-**Now:** the signup form (home page, [app/Main.tsx](app/Main.tsx)) is switched off. Submitting an email shows "Subscriptions are not yet turned on." and does nothing else.
-
-**Where it lives**
-
-- Switch: `newsletter.enabled` in [data/siteMetadata.js](data/siteMetadata.js) (currently `false`)
-- Provider: `newsletter.provider` in the same block (currently `buttondown`)
-- Form: [components/NewsletterForm.tsx](components/NewsletterForm.tsx) (the "not yet turned on" wording is in here)
-- API route: [app/api/newsletter/route.ts](app/api/newsletter/route.ts)
-
-**To turn it on (Buttondown)**
-
-1. Create an account at buttondown.com and copy your API key.
-2. Add this line to `.env.local`:
-   ```
-   BUTTONDOWN_API_KEY=your-key-here
-   ```
-3. In `data/siteMetadata.js`, set `enabled: true` in the `newsletter` block.
-4. Restart the dev server and test with a real email address.
-
-**Other providers:** change `provider` to `mailchimp`, `convertkit`, `klaviyo`, `revue`, `emailoctopus` or `beehive`, and set that provider's variables from `.env.example` instead.
-
-**Not covered:** `BlogNewsletterForm` (from `pliny`) can be used inside a post's `.mdx`. It ignores the `enabled` switch and still shows the old "invalid or already subscribed" message when subscriptions are off. No post uses it right now.
-
 ## Comments (Giscus)
 
 **Now:** every post shows a "Load Comments" button, but Giscus is not configured, so comments will not work.
