@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'Why Not Innovate?',
   author: 'Michael Hale',
   headerTitle: 'WhyNotInnovate',
-  description: 'A blog by an old timmer to blab on about random stuff!',
+  description: 'A blog by an old timer to blab on about random stuff!',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://www.whynotinnovate.com/',
@@ -49,10 +49,9 @@ const siteMetadata = {
     // },
   },
   newsletter: {
-    // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus, beehive
-    // Please add your .env file and modify it according to your selection
-    provider: 'buttondown',
-    enabled: false, // set to true once the provider and its .env keys are set up
+    // Powered by Kit (see app/actions/subscribe.ts); needs KIT_API_KEY and KIT_FORM_ID in .env.local
+    provider: 'kit',
+    enabled: true,
   },
   comments: {
     // If you want to use an analytics provider you have to add it to the

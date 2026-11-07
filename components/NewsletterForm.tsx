@@ -2,9 +2,11 @@
 
 import { useRef, useState } from 'react'
 import siteMetadata from '@/data/siteMetadata'
+import { subscribe as subscribeAction } from 'app/actions/subscribe'
 
-const NewsletterForm = ({ title = 'Subscribe to the newsletter', apiUrl = '/api/newsletter' }) => {
+const NewsletterForm = ({ title = 'Subscribe to the newsletter' }) => {
   const inputEl = useRef<HTMLInputElement>(null)
+  const [pending, setPending] = useState(false)
   const [error, setError] = useState(false)
   const [message, setMessage] = useState('')
   const [subscribed, setSubscribed] = useState(false)
@@ -16,15 +18,12 @@ const NewsletterForm = ({ title = 'Subscribe to the newsletter', apiUrl = '/api/
       setMessage('Subscriptions are not yet turned on.')
       return
     }
-    const res = await fetch(apiUrl, {
-      body: JSON.stringify({ email: inputEl.current?.value }),
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-    })
-    const { error: apiError } = await res.json()
-    if (apiError) {
+    setPending(true)
+    const res = await subscribeAction(inputEl.current?.value ?? '')
+    setPending(false)
+    if (!res.success) {
       setError(true)
-      setMessage('Your e-mail address is invalid or you are already subscribed!')
+      setMessage(res.error)
       return
     }
     if (inputEl.current) inputEl.current.value = ''
@@ -56,9 +55,9 @@ const NewsletterForm = ({ title = 'Subscribe to the newsletter', apiUrl = '/api/
           <button
             className={`bg-primary-500 w-full rounded-md px-4 py-2 font-medium text-white sm:py-0 ${subscribed ? 'cursor-default' : 'hover:bg-primary-700 dark:hover:bg-primary-400'} focus:ring-primary-600 focus:ring-2 focus:ring-offset-2 focus:outline-none dark:ring-offset-black`}
             type="submit"
-            disabled={subscribed}
+            disabled={subscribed || pending}
           >
-            {subscribed ? 'Thank you!' : 'Sign up'}
+            {subscribed ? 'Thank you!' : pending ? 'Signing up…' : 'Sign up'}
           </button>
         </div>
       </form>
